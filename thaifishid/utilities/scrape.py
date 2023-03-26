@@ -64,12 +64,14 @@ def download_fish_images(url):
     fish_info = extract_fish_info(response.content)
     threads = []
 
-    print(f"Saving type: {fish_type}")
-
     for fish_name, image_link in fish_info:
-        print(f"\tSaving fish: {fish_name}")
         filename = f'{fish_name}.jpg'
         filepath = os.path.join(dir_name, filename)
+
+        if not os.path.exists(filepath) or os.path.getsize(filepath) == 0:
+            print(f"\tSaving fish: {fish_name}")
+        else:
+            continue
 
         t = threading.Thread(target=download_image,
                              args=(image_link, filepath))
