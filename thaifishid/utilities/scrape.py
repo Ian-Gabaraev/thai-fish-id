@@ -1,9 +1,10 @@
 import ast
-import threading
-import requests
 import os
-from dotenv import load_dotenv
+import threading
+
+import requests
 from bs4 import BeautifulSoup
+from dotenv import load_dotenv
 
 load_dotenv()
 

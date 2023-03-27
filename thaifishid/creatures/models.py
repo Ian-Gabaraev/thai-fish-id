@@ -1,7 +1,7 @@
 from django.db import models
 
-from .constants import (BEHAVIOR_CHOICES, MARKINGS_CHOICES, SHAPE_CHOICES,
-                        SIZE_CHOICES, HABITAT_CHOICES)
+from .constants import (BEHAVIOR_CHOICES, HABITAT_CHOICES, MARKINGS_CHOICES,
+                        SHAPE_CHOICES, SIZE_CHOICES)
 
 
 def get_species_image_path(instance, filename):

@@ -1,5 +1,6 @@
 from django.contrib import admin
-from .models import Fish, Shark, Anemone, Coral, Color, Habitat
+
+from .models import Anemone, Color, Coral, Fish, Habitat, Shark
 
 
 class FishAdmin(admin.ModelAdmin):
