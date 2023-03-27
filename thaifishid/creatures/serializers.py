@@ -12,7 +12,7 @@ class HabitatSerializer(serializers.ModelSerializer):
 class ColorSerializer(serializers.ModelSerializer):
     class Meta:
         model = Color
-        fields = '__all__'
+        fields = ('name',)
 
 
 class SpeciesSerializer(serializers.ModelSerializer):
@@ -27,7 +27,7 @@ class SpeciesSerializer(serializers.ModelSerializer):
 class FishSerializer(serializers.ModelSerializer):
     class Meta:
         model = Fish
-        fields = '__all__'
+        fields = ('name', 'scientific_name', 'description', 'image')
 
 
 class SharkSerializer(serializers.ModelSerializer):

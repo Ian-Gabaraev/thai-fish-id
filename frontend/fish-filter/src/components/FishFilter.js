@@ -4,6 +4,7 @@ import { Emojione } from "react-emoji-render";
 import axios from "axios";
 
 const SHAPE_OPTIONS = [
+  { value: null, label: '-' },
   { value: "rounded", label: <Emojione text="🔵 Rounded" size={16} /> },
   { value: "elongated", label: <Emojione text="🐠 Elongated" size={16} /> },
   { value: "flat", label: <Emojione text="🐟 Flat" size={16} /> },
@@ -20,7 +21,6 @@ const COLOR_OPTIONS = [
   { value: "orange", label: " 🟠 Orange" },
 ];
 
-
 const BEHAVIOR_OPTIONS = [
   { value: "aggressive", label: <Emojione text="👊 Aggressive" /> },
   { value: "non-aggressive", label: <Emojione text="😇 Peaceful" /> },
@@ -28,13 +28,14 @@ const BEHAVIOR_OPTIONS = [
 ];
 
 const FishFilter = () => {
+  const [fishData, setFishData] = useState(null);
   const [selectedShape, setSelectedShape] = useState("");
   const [selectedBehaviors, setSelectedBehaviors] = useState([]);
   const [selectedColors, setSelectedColors] = useState([]);
   const [selectedSize, setSelectedSize] = useState("");
 
-  const handleShapeChange = (event) => {
-    setSelectedShape(event.target.value);
+  const handleShapeChange = (selectedOption) => {
+    setSelectedShape(selectedOption.value);
   };
 
   const handleBehaviorChange = (selectedOptions) => {
@@ -66,13 +67,16 @@ const FishFilter = () => {
       const colorsParam = selectedColors;
       body = { ...body, colors: colorsParam };
     }
+
     if (selectedSize) {
       body = { ...body, size: selectedSize };
     }
+
     axios
-      .post("http://localhost:8000/creatures/fish/", body)
+      .post(`${process.env.REACT_APP_BACKEND_URL}/creatures/fish/`, body)
       .then((response) => {
         console.log(response.data);
+        setFishData(response.data);
       })
       .catch((error) => {
         console.error(error);
@@ -82,17 +86,23 @@ const FishFilter = () => {
   return (
     <form onSubmit={handleSubmit} className="fish-filter-form">
       <h3 className="mb-3 text-center">Thai Fish ID</h3>
+
       <div className="form-group">
         <label>Select Shape:</label>
         <Select
           options={SHAPE_OPTIONS}
-          value={selectedShape}
-          onChange={(option) => setSelectedShape(option.value)}
+          value={SHAPE_OPTIONS.find((option) => option.value === selectedShape)}
+          onChange={handleShapeChange}
         />
       </div>
+
       <div className="form-group">
         <label>Select Colors:</label>
-        <Select isMulti options={COLOR_OPTIONS} onChange={handleColorChange} />
+        <Select
+            isMulti
+            options={COLOR_OPTIONS}
+            onChange={handleColorChange}
+        />
         {selectedColors.length > 0 && (
           <div>
             Selected colors:{" "}
@@ -112,6 +122,7 @@ const FishFilter = () => {
           </div>
         )}
       </div>
+
       <div className="form-group">
         <label>Select Size:</label>
         <select
@@ -125,6 +136,7 @@ const FishFilter = () => {
           <option value="large">Large</option>
         </select>
       </div>
+
       <div className="form-group">
         <label>Select Behaviors:</label>
         <Select
@@ -153,9 +165,26 @@ const FishFilter = () => {
         )}
       </div>
 
-      <button type="submit" className="btn btn-primary btn-block">
+      <button type="submit" className="btn btn-primary btn-block mb-5">
         Filter Fish
       </button>
+
+      {fishData && (
+        <div className="fish-result">
+          {fishData.map((fish) => (
+            <div key={fish.name}>
+              <img
+                src={`${process.env.REACT_APP_BACKEND_URL}${fish.image}`}
+                alt={fish.name}
+                width="200"
+              />
+              <h3>{fish.name}</h3>
+              <code>{fish.scientific_name}</code>
+              <p>{fish.description}</p>
+            </div>
+          ))}
+        </div>
+      )}
     </form>
   );
 };
